@@ -175,3 +175,29 @@ function renderGrid(data) {
   document.getElementById("listings").innerHTML =
     count ? html : "<p>No matching items</p>";
 }
+function createPetal() {
+  const petal = document.createElement("div");
+  petal.classList.add("petal");
+
+  // random horizontal position
+  petal.style.left = Math.random() * window.innerWidth + "px";
+
+  // random size variation
+  const size = Math.random() * 8 + 6;
+  petal.style.width = size + "px";
+  petal.style.height = size + "px";
+
+  // random speed
+  const duration = Math.random() * 5 + 5;
+  petal.style.animationDuration = duration + "s";
+
+  document.body.appendChild(petal);
+
+  // remove after animation ends
+  setTimeout(() => {
+    petal.remove();
+  }, duration * 1000);
+}
+
+// continuous loop
+setInterval(createPetal, 300);
