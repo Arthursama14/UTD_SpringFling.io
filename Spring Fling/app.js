@@ -14,19 +14,20 @@ function fetchDataAndRender() {
 
       data.forEach(item => {
 
-        // 🧠 SAFE NORMALIZED FIELDS
-        const listing = (item["Would you like to add an item for listing?"] || "")
-          .trim()
-          .toLowerCase();
+        // 🧠 SAFE NORMALIZATION
+        const listingText = (item["Would you like to add an item for listing?"] || "")
+          .toLowerCase()
+          .trim();
 
-        const availability = (item["Mark the current availability of the item. If the item is no longer available, please resubmit an updated form."] || "")
-          .trim()
-          .toLowerCase();
+        const availabilityText = (item["Mark the current availability of the item. If the item is no longer available, please resubmit an updated form."] || "")
+          .toLowerCase()
+          .trim();
 
-        // 🛑 FILTER
-        if (listing !== "yes" || availability !== "available") {
-          return;
-        }
+        // 🔥 FLEXIBLE FILTER (FIXED)
+        const listing = listingText.includes("yes");
+        const availability = availabilityText.includes("available");
+
+        if (!listing || !availability) return;
 
         // 🖼️ IMAGE HANDLING
         let image = (item["Provide images of the item in question."] || "").trim();
@@ -57,7 +58,9 @@ function fetchDataAndRender() {
             </p>
 
             <p>
-              <strong>Exchange:</strong> ${item["Which option best explains your ideal exchange method? (Reminder. Items shouldn't be left unattended in public spaces and breezeways.)"] || "N/A"}
+              <strong>Exchange:</strong> ${
+                item["Which option best explains your ideal exchange method? (Reminder. Items shouldn't be left unattended in public spaces and breezeways.)"] || "N/A"
+              }
             </p>
           </div>
         `;
@@ -65,9 +68,10 @@ function fetchDataAndRender() {
         count++;
       });
 
-      // 📦 ONLY UPDATE IF CHANGED (prevents flicker/disappearing)
+      // 📦 RENDER (stable version)
+      const container = document.getElementById("listings");
+
       if (html !== lastHTML) {
-        const container = document.getElementById("listings");
         container.innerHTML =
           count > 0
             ? html
@@ -88,6 +92,5 @@ function fetchDataAndRender() {
 // 🚀 INITIAL LOAD
 fetchDataAndRender();
 
-// 🔄 OPTIONAL AUTO-REFRESH (safe version)
-// prevents constant wiping/flicker issues
+// 🔄 OPTIONAL AUTO-REFRESH (safe + non-destructive)
 setInterval(fetchDataAndRender, 15000);
