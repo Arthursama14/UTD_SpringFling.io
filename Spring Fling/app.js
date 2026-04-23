@@ -1,11 +1,12 @@
+
 const SHEET_ID = "1qevKj7o670qjJR5uRik30gknlQAvX87rrliKdpQ-5Xk";
 const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/Form%20Responses%201`;
 
 let globalData = [];
 
-/* ---------------------------
+/* =========================
    INIT
-----------------------------*/
+========================= */
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
@@ -15,9 +16,9 @@ fetch(API_URL)
     renderGrid(data);
   });
 
-/* ---------------------------
-   BUILD FILTER OPTIONS
-----------------------------*/
+/* =========================
+   FILTERS
+========================= */
 function buildFilters(data) {
   const objectSet = new Set();
   const tagSet = new Set();
@@ -44,40 +45,37 @@ function buildFilters(data) {
   populateSelect("objectFilter", objectSet);
   populateSelect("tagFilter", tagSet);
 
-  document.getElementById("objectFilter")
-    .addEventListener("change", applyFilters);
-
-  document.getElementById("tagFilter")
-    .addEventListener("change", applyFilters);
+  document.getElementById("objectFilter").addEventListener("change", applyFilters);
+  document.getElementById("tagFilter").addEventListener("change", applyFilters);
 }
 
-/* ---------------------------
-   POPULATE DROPDOWN
-----------------------------*/
+/* =========================
+   POPULATE DROPDOWNS
+========================= */
 function populateSelect(id, values) {
   const select = document.getElementById(id);
 
   select.innerHTML = `<option value="all">All</option>`;
 
   if (!values || values.size === 0) {
-    const option = document.createElement("option");
-    option.textContent = "No options available";
-    option.disabled = true;
-    select.appendChild(option);
+    const opt = document.createElement("option");
+    opt.textContent = "No options available";
+    opt.disabled = true;
+    select.appendChild(opt);
     return;
   }
 
   values.forEach(val => {
     const option = document.createElement("option");
-    option.value = val.toLowerCase();
+    option.value = val;
     option.textContent = val;
     select.appendChild(option);
   });
 }
 
-/* ---------------------------
+/* =========================
    FILTER LOGIC
-----------------------------*/
+========================= */
 function applyFilters() {
   const objectVal = document.getElementById("objectFilter").value;
   const tagVal = document.getElementById("tagFilter").value;
@@ -105,14 +103,14 @@ function applyFilters() {
   renderGrid(filtered);
 }
 
-/* ---------------------------
+/* =========================
    RENDER GRID
-----------------------------*/
+========================= */
 function renderGrid(data) {
   let html = "";
   let count = 0;
 
-  data.forEach(item => {
+  data.forEach((item, index) => {
 
     const listing = (item["Would you like to add an item for listing?"] || "")
       .toLowerCase()
@@ -124,25 +122,32 @@ function renderGrid(data) {
 
     if (!listing || !availability) return;
 
-    /* ---------------------------
-       IMAGE HANDLING (SAFE)
-    ----------------------------*/
-    let image = (item["Provide images of the item in question."] || "").trim();
+    /* -------------------------
+       MULTI IMAGE SUPPORT
+    ------------------------- */
+    let rawImage = (item["Provide images of the item in question."] || "").trim();
 
-    if (image && image.includes("drive.google.com")) {
-      const match = image.match(/[-\w]{25,}/);
-      if (match) {
-        image = `https://lh3.googleusercontent.com/d/${match[0]}`;
+    let images = [];
+
+    if (rawImage.includes(",")) {
+      images = rawImage.split(",").map(i => i.trim());
+    } else {
+      images = [rawImage];
+    }
+
+    images = images.map(img => {
+      if (img && img.includes("drive.google.com")) {
+        const match = img.match(/[-\w]{25,}/);
+        if (match) {
+          return `https://lh3.googleusercontent.com/d/${match[0]}`;
+        }
       }
-    }
+      return img || "https://via.placeholder.com/300x200?text=No+Image";
+    });
 
-    if (!image) {
-      image = "https://via.placeholder.com/300x200?text=No+Image";
-    }
-
-    /* ---------------------------
+    /* -------------------------
        FIELDS
-    ----------------------------*/
+    ------------------------- */
     const objectName = item["What is the Object?"] || "No Item";
     const email = item["What is your contact info(UTD Email)"] || "N/A";
     const tags = item["What tags best describe the item and its history?"] || "None";
@@ -152,13 +157,16 @@ function renderGrid(data) {
       .toLowerCase()
       .trim();
 
-    /* ---------------------------
-       CARD HTML
-    ----------------------------*/
+    /* -------------------------
+       CARD
+    ------------------------- */
     html += `
       <div class="card">
 
-        <img src="${image}" alt="Item Image" />
+        <img class="item-image"
+             data-images='${JSON.stringify(images)}'
+             src="${images[0]}"
+             alt="Item Image" />
 
         <h3>${objectName}</h3>
 
@@ -181,11 +189,49 @@ function renderGrid(data) {
 
   document.getElementById("listings").innerHTML =
     count ? html : "<p>No matching items</p>";
+
+  startImageCycling();
 }
 
-/* ---------------------------
-   🌸 PETALS (FIXED INIT)
-----------------------------*/
+/* =========================
+   IMAGE CYCLING
+========================= */
+function startImageCycling() {
+  document.querySelectorAll(".item-image").forEach(img => {
+
+    const images = JSON.parse(img.dataset.images || "[]");
+    if (images.length <= 1) return;
+
+    let index = 0;
+
+    setInterval(() => {
+      index = (index + 1) % images.length;
+      img.src = images[index];
+    }, 3000);
+  });
+}
+
+/* =========================
+   LIGHTBOX (FULLSCREEN VIEW)
+========================= */
+document.addEventListener("click", (e) => {
+
+  if (e.target.classList.contains("item-image")) {
+    const lightbox = document.getElementById("lightbox");
+    const img = document.getElementById("lightbox-img");
+
+    img.src = e.target.src;
+    lightbox.style.display = "flex";
+  }
+
+  if (e.target.id === "lightbox") {
+    e.target.style.display = "none";
+  }
+});
+
+/* =========================
+   🌸 PETALS
+========================= */
 function createPetal() {
   const petal = document.createElement("div");
   petal.classList.add("petal");
@@ -204,7 +250,7 @@ function createPetal() {
   setTimeout(() => petal.remove(), duration * 1000);
 }
 
-/* IMPORTANT: wait for page load */
+/* safe init */
 window.addEventListener("load", () => {
   setInterval(createPetal, 300);
 });
