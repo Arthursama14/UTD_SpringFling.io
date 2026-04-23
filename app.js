@@ -23,24 +23,39 @@ function buildFilters(data) {
   const tagSet = new Set();
 
   data.forEach(item => {
+
     const obj = (item["What is the Object?"] || "").trim();
-    const tags = (item["What tags best describe the item and its history?"] || "").trim();
 
-    if (obj) objectSet.add(obj);
+    const tagsRaw = (item["What tags best describe the item and its history?"] || "")
+      .toLowerCase()
+      .trim();
 
-    if (tags) {
-      tags.split(",").forEach(t => {
-        const clean = t.trim();
-        if (clean) tagSet.add(clean);
-      });
+    // 🧠 OBJECT FILTER FIX
+    if (obj) {
+      objectSet.add(obj);
+    }
+
+    // 🧠 TAG PARSING FIX (handles multiple separators)
+    if (tagsRaw) {
+      tagsRaw
+        .split(/[,;|]/)   // handles comma, semicolon, pipe
+        .map(t => t.trim())
+        .filter(Boolean)
+        .forEach(t => tagSet.add(t));
     }
   });
+
+  console.log("Objects found:", objectSet);
+  console.log("Tags found:", tagSet);
 
   populateSelect("objectFilter", objectSet);
   populateSelect("tagFilter", tagSet);
 
-  document.getElementById("objectFilter").addEventListener("change", applyFilters);
-  document.getElementById("tagFilter").addEventListener("change", applyFilters);
+  document.getElementById("objectFilter")
+    .addEventListener("change", applyFilters);
+
+  document.getElementById("tagFilter")
+    .addEventListener("change", applyFilters);
 }
 
 /* ---------------------------
@@ -49,10 +64,10 @@ function buildFilters(data) {
 function populateSelect(id, values) {
   const select = document.getElementById(id);
 
-  // reset first (prevents duplicates on reloads)
+  // reset dropdown
   select.innerHTML = `<option value="all">All</option>`;
 
-  if (values.size === 0) {
+  if (!values || values.size === 0) {
     const option = document.createElement("option");
     option.textContent = "No options available";
     option.disabled = true;
