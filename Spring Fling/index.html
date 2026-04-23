@@ -1,111 +1,85 @@
-<!-- Title -->
-<h1 class="title">Spring Fling</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spring Fling Marketplace</title>
 
-<div id="listings" class="grid"></div>
+  <!-- Google Font (digital style) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-/* 🌈 Gradient background */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #e0f7fa, #e1bee7, #fce4ec);
-  min-height: 100vh;
-}
+  <style>
+    /* 🌈 Background */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #e1bee7, #fce4ec);
+      min-height: 100vh;
+    }
 
-/* 🎮 Title styling */
-.title {
-  text-align: center;
-  color: white;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 48px;
-  letter-spacing: 3px;
-  margin-top: 30px;
-  margin-bottom: 10px;
+    /* 🎮 Title */
+    .title {
+      text-align: center;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 48px;
+      letter-spacing: 3px;
+      margin-top: 30px;
+      margin-bottom: 10px;
 
-  /* seesaw animation */
-  display: inline-block;
-  width: 100%;
-  animation: sway 6s ease-in-out infinite;
-  transform-origin: center;
-}
+      animation: sway 6s ease-in-out infinite;
+    }
 
-/* slow seesaw motion */
-@keyframes sway {
-  0%   { transform: rotate(-2deg); }
-  50%  { transform: rotate(2deg); }
-  100% { transform: rotate(-2deg); }
-}
+    @keyframes sway {
+      0%   { transform: rotate(-2deg); }
+      50%  { transform: rotate(2deg); }
+      100% { transform: rotate(-2deg); }
+    }
 
-/* Grid layout */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+    /* 🧱 Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
 
-/* Card styling */
-.card {
-  border-radius: 12px;
-  padding: 15px;
-  background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
-}
+    /* 📦 Cards */
+    .card {
+      border-radius: 12px;
+      padding: 15px;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
 
-.card:hover {
-  transform: scale(1.02);
-}
+    .card:hover {
+      transform: scale(1.02);
+    }
 
-.card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-}
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
 
-.tags {
-  font-size: 0.9em;
-  color: #555;
-}
-</style>
+    .tags {
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+<body>
 
-<script>
-fetch("https://sheetdb.io/api/v1/YOUR_API")
-  .then(res => res.json())
-  .then(data => {
-    let html = "";
+  <!-- 🎉 Title -->
+  <h1 class="title">Spring Fling</h1>
 
-    data.forEach(item => {
-      if (
-        item["Approved"] === "Yes" &&
-        item["Mark the current availability of the item. If the item is no longer available, please resubmit an updated form."] === "Available"
-      ) {
+  <!-- 📦 Listings Container -->
+  <div id="listings" class="grid"></div>
 
-        let image = item["Provide images of the item in question."];
-        if (image && image.includes(",")) {
-          image = image.split(",")[0];
-        }
+  <!-- ⚙️ Script -->
+  <script src="app.js"></script>
 
-        html += `
-          <div class="card">
-            <img src="${image}" alt="Item Image"/>
-
-            <h3>${item["What is the Object?"]}</h3>
-
-            <p><strong>Contact:</strong> ${item["Email Address"]}</p>
-
-            <p class="tags"><strong>Tags:</strong> ${item["What tags best describe the item and its history?"]}</p>
-
-            <p><strong>Exchange:</strong> ${item["Which option best explains your ideal exchange method? (Reminder. Items shouldn't be left unattended in public spaces and breezeways.)"]}</p>
-          </div>
-        `;
-      }
-    });
-
-    document.getElementById("listings").innerHTML = html;
-  });
-</script>
+</body>
+</html>
