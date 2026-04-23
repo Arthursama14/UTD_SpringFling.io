@@ -3,6 +3,9 @@ const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/Form%20Responses%201`;
 
 let globalData = [];
 
+/* ---------------------------
+   INIT
+----------------------------*/
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
@@ -20,29 +23,42 @@ function buildFilters(data) {
   const tagSet = new Set();
 
   data.forEach(item => {
-    const obj = item["What is the Object?"];
-    const tags = item["What tags best describe the item and its history?"];
+    const obj = (item["What is the Object?"] || "").trim();
+    const tags = (item["What tags best describe the item and its history?"] || "").trim();
 
     if (obj) objectSet.add(obj);
 
     if (tags) {
-      tags.split(",").forEach(t => tagSet.add(t.trim()));
+      tags.split(",").forEach(t => {
+        const clean = t.trim();
+        if (clean) tagSet.add(clean);
+      });
     }
   });
 
   populateSelect("objectFilter", objectSet);
   populateSelect("tagFilter", tagSet);
 
-  // attach listeners
   document.getElementById("objectFilter").addEventListener("change", applyFilters);
   document.getElementById("tagFilter").addEventListener("change", applyFilters);
 }
 
 /* ---------------------------
-   POPULATE DROPDOWN
+   POPULATE DROPDOWN (FIXED)
 ----------------------------*/
 function populateSelect(id, values) {
   const select = document.getElementById(id);
+
+  // reset first (prevents duplicates on reloads)
+  select.innerHTML = `<option value="all">All</option>`;
+
+  if (values.size === 0) {
+    const option = document.createElement("option");
+    option.textContent = "No options available";
+    option.disabled = true;
+    select.appendChild(option);
+    return;
+  }
 
   values.forEach(val => {
     const option = document.createElement("option");
@@ -50,29 +66,26 @@ function populateSelect(id, values) {
     option.textContent = val;
     select.appendChild(option);
   });
-
-  // grey out if no options
-  if (values.size === 0) {
-    const option = document.createElement("option");
-    option.textContent = "No options available";
-    option.disabled = true;
-    select.appendChild(option);
-  }
 }
 
 /* ---------------------------
-   FILTER LOGIC
+   FILTER LOGIC (FIXED)
 ----------------------------*/
 function applyFilters() {
   const objectVal = document.getElementById("objectFilter").value;
   const tagVal = document.getElementById("tagFilter").value;
 
   const filtered = globalData.filter(item => {
-    const obj = item["What is the Object?"];
-    const tags = item["What tags best describe the item and its history?"] || "";
+    const obj = (item["What is the Object?"] || "").trim();
+    const tags = (item["What tags best describe the item and its history?"] || "").toLowerCase();
 
-    const objectMatch = objectVal === "all" || obj === objectVal;
-    const tagMatch = tagVal === "all" || tags.includes(tagVal);
+    const objectMatch =
+      objectVal === "all" ||
+      obj.toLowerCase() === objectVal.toLowerCase();
+
+    const tagMatch =
+      tagVal === "all" ||
+      tags.split(",").map(t => t.trim()).includes(tagVal.toLowerCase());
 
     return objectMatch && tagMatch;
   });
@@ -115,8 +128,8 @@ function renderGrid(data) {
     html += `
       <div class="card">
         <img src="${image}" />
-        <h3>${item["What is the Object?"]}</h3>
-        <p>${item["Email Address"]}</p>
+        <h3>${item["What is the Object?"] || "No Title"}</h3>
+        <p>${item["Email Address"] || "N/A"}</p>
       </div>
     `;
 

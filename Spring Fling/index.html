@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <title>Spring Fling Marketplace</title>
 
-  <!-- Google Font (digital style) -->
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* 🌈 Background */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -25,7 +24,6 @@
       letter-spacing: 3px;
       margin-top: 30px;
       margin-bottom: 10px;
-
       animation: sway 6s ease-in-out infinite;
     }
 
@@ -35,27 +33,28 @@
       100% { transform: rotate(-2deg); }
     }
 
-	<div id="filterBar">
+    /* 🔍 FILTER BAR */
+    #filterBar {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px;
+      flex-wrap: wrap;
+    }
 
-	<div class="filter-group">
-		<label>Object Type</label>
-		<select id="objectFilter">
-		<option value="all">All Objects</option>
-		</select>
-	</div>
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+    }
 
-	<div class="filter-group">
-		<label>Tags</label>
-		<select id="tagFilter">
-		<option value="all">All Tags</option>
-		</select>
-	</div>
+    select {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
 
-	</div>
-
-	<div id="listings"></div>
-
-    /* 🧱 Grid */
+    /* 🧱 GRID */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -63,7 +62,7 @@
       padding: 20px;
     }
 
-    /* 📦 Cards */
+    /* 📦 CARD */
     .card {
       border-radius: 12px;
       padding: 15px;
@@ -95,7 +94,26 @@
   <!-- 🎉 Title -->
   <h1 class="title">Spring Fling</h1>
 
-  <!-- 📦 Listings Container -->
+  <!-- 🔍 FILTER UI (FIXED LOCATION) -->
+  <div id="filterBar">
+
+    <div class="filter-group">
+      <label>Object Type</label>
+      <select id="objectFilter">
+        <option value="all">All Objects</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Tags</label>
+      <select id="tagFilter">
+        <option value="all">All Tags</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- 📦 Listings -->
   <div id="listings" class="grid"></div>
 
   <!-- ⚙️ Script -->
