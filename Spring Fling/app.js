@@ -1,5 +1,5 @@
 // 🔗 REPLACE THIS WITH YOUR APPS SCRIPT URL
-const API_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc3PSOYm81WJXwmicYqCw-HwvgkiSonD2rLF4TkTe_6KaawmQ/viewform?usp=header";
+const API_URL = "https://script.google.com/macros/s/AKfycbxP0wiijf3Ee3dt-uG5G4MdhmntVoV9Utd-exkFG-NxZsfvQPPZ2qkIuIOA86qPAVpn/exec";
 
 fetch(API_URL)
   .then(response => response.json())
