@@ -10,6 +10,26 @@ body {
   padding: 20px;
 }
 
+#filterBar {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial;
+}
+
+select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
 .card {
   background: white;
   border-radius: 12px;
