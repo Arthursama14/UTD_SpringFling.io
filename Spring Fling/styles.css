@@ -25,35 +25,17 @@ body {
   100% { transform: rotate(-2deg); }
 }
 
-/* 📌 DISCLAIMER (DARK MODE) */
+/* 📌 DISCLAIMER (FIXED - SINGLE VERSION) */
 .disclaimer {
-  max-width: 850px;
-  margin: 10px auto 20px;
-  padding: 14px 20px;
-  text-align: center;
-  font-size: 14px;
-
-  background: rgba(0, 0, 0, 0.85);
-  color: white;
-
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-
-  backdrop-filter: blur(6px);
-  position: relative;
-  z-index: 2;
-}
-
-.disclaimer {
-  background: rgba(0, 0, 0, 0.9) !important;
-  color: #ffffff !important;
-
   max-width: 850px;
   margin: 10px auto 20px;
   padding: 14px 20px;
 
   text-align: center;
   font-size: 14px;
+
+  background: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
 
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
@@ -65,7 +47,11 @@ body {
 }
 
 .disclaimer a {
-  color: #ffccff !important;
+  color: #ffccff;
+}
+
+.disclaimer a:hover {
+  text-decoration: underline;
 }
 
 /* 🔍 FILTER BAR */
@@ -141,7 +127,7 @@ select {
   color: #555;
 }
 
-/* 🌸 SAKURA PETALS */
+/* 🌸 PETALS */
 .petal {
   position: fixed;
   top: -20px;
@@ -159,8 +145,25 @@ select {
 
   transform: rotate(45deg);
 
-  /* ✏️ white outline */
   border: 1px solid rgba(255, 255, 255, 0.9);
 
   animation: fall linear forwards;
+}
+
+/* 🌬 FALL ANIMATION (THIS WAS MISSING BEFORE) */
+@keyframes fall {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.95;
+  }
+
+  50% {
+    transform: translateY(50vh) translateX(30px) rotate(180deg);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translateY(110vh) translateX(-30px) rotate(360deg);
+    opacity: 0;
+  }
 }
