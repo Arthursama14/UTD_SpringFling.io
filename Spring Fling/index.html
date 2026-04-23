@@ -10,27 +10,53 @@
   <style>
     body {
       margin: 0;
+      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #e0f7fa, #e1bee7, #fce4ec);
-      min-height: 100vh;
     }
 
-    /* 🎮 Title */
+    /* 🎮 TITLE */
     .title {
       text-align: center;
       color: white;
       font-family: 'Orbitron', sans-serif;
       font-size: 48px;
-      letter-spacing: 3px;
       margin-top: 30px;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       animation: sway 6s ease-in-out infinite;
     }
 
     @keyframes sway {
-      0%   { transform: rotate(-2deg); }
-      50%  { transform: rotate(2deg); }
+      0% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
       100% { transform: rotate(-2deg); }
+    }
+
+    /* 📌 DISCLAIMER */
+    .disclaimer {
+      max-width: 850px;
+      margin: 10px auto 20px;
+      padding: 12px 18px;
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 10px;
+      backdrop-filter: blur(4px);
+    }
+
+    .disclaimer a {
+      color: #6a1b9a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .disclaimer a:hover {
+      text-decoration: underline;
+    }
+
+    .disclaimer em {
+      font-size: 12.5px;
+      line-height: 1.4;
     }
 
     /* 🔍 FILTER BAR */
@@ -49,30 +75,38 @@
     }
 
     select {
-      padding: 6px;
-      border-radius: 6px;
+      padding: 8px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      background: white;
+    }
+
+    label {
+      font-size: 12px;
+      margin-bottom: 4px;
+      font-weight: bold;
+      color: #444;
     }
 
     /* 🧱 GRID */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
       padding: 20px;
     }
 
     /* 📦 CARD */
     .card {
+      background: white;
       border-radius: 12px;
       padding: 15px;
-      background: #ffffff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       transition: transform 0.2s ease;
     }
 
     .card:hover {
-      transform: scale(1.02);
+      transform: translateY(-4px);
     }
 
     .card img {
@@ -80,43 +114,74 @@
       height: 200px;
       object-fit: cover;
       border-radius: 8px;
+      margin-bottom: 10px;
     }
 
     .tags {
       font-size: 0.9em;
       color: #555;
     }
+
+    .card p {
+      font-size: 13px;
+      margin: 4px 0;
+      color: #444;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- 🎉 Title -->
+  <!-- 🎮 TITLE -->
   <h1 class="title">Spring Fling</h1>
 
-  <!-- 🔍 FILTER UI (FIXED LOCATION) -->
+  <!-- 📌 DISCLAIMER -->
+  <div class="disclaimer">
+
+    <p>
+      Welcome to the exchange list! If you'd like to add an item,
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3PSOYm81WJXwmicYqCw-HwvgkiSonD2rLF4TkTe_6KaawmQ/viewform?usp=header"
+         target="_blank">
+        click here
+      </a>!
+    </p>
+
+    <p>
+      <em>
+        *Note: This is a voluntary tool for browsing items people want to give away.
+        We are not responsible for communications and interactions past this point.
+        Items listing take time to be added and approved. All communication is done
+        through your UTD email. Your email information is all that is needed to join in.
+        If you'd like a listing removed email jeb160630@utdallas.edu from your UTD email
+        or contact your PA! It may take some time to remove, as this is a solo developed project.
+      </em>
+    </p>
+
+  </div>
+
+  <!-- 🔍 FILTERS -->
   <div id="filterBar">
 
     <div class="filter-group">
       <label>Object Type</label>
       <select id="objectFilter">
-        <option value="all">All Objects</option>
+        <option value="all">All</option>
       </select>
     </div>
 
     <div class="filter-group">
       <label>Tags</label>
       <select id="tagFilter">
-        <option value="all">All Tags</option>
+        <option value="all">All</option>
       </select>
     </div>
 
   </div>
 
-  <!-- 📦 Listings -->
+  <!-- 📦 GRID -->
   <div id="listings" class="grid"></div>
 
-  <!-- ⚙️ Script -->
+  <!-- ⚙️ SCRIPT -->
   <script src="app.js"></script>
 
 </body>
