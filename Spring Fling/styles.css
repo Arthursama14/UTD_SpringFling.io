@@ -44,19 +44,28 @@ body {
   z-index: 2;
 }
 
+.disclaimer {
+  background: rgba(0, 0, 0, 0.9) !important;
+  color: #ffffff !important;
+
+  max-width: 850px;
+  margin: 10px auto 20px;
+  padding: 14px 20px;
+
+  text-align: center;
+  font-size: 14px;
+
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+
+  backdrop-filter: blur(6px);
+
+  position: relative;
+  z-index: 2;
+}
+
 .disclaimer a {
-  color: #ffccff;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.disclaimer a:hover {
-  text-decoration: underline;
-}
-
-.disclaimer em {
-  font-size: 12.5px;
-  line-height: 1.4;
+  color: #ffccff !important;
 }
 
 /* 🔍 FILTER BAR */
@@ -135,30 +144,23 @@ select {
 /* 🌸 SAKURA PETALS */
 .petal {
   position: fixed;
-  top: -10px;
-  width: 12px;
-  height: 12px;
+  top: -20px;
 
-  background: radial-gradient(circle, #ffb7c5, #ff69b4);
+  width: 22px;
+  height: 22px;
+
+  background: radial-gradient(circle, #ff9bb5, #ff4f9a);
   border-radius: 50% 50% 50% 0;
 
-  opacity: 0.7;
+  opacity: 0.9;
   pointer-events: none;
 
   z-index: 0;
 
   transform: rotate(45deg);
 
-  animation: fall linear forwards;
-}
+  /* ✏️ white outline */
+  border: 1px solid rgba(255, 255, 255, 0.9);
 
-@keyframes fall {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(110vh) rotate(360deg);
-    opacity: 0;
-  }
+  animation: fall linear forwards;
 }
