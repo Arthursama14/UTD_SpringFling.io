@@ -127,6 +127,7 @@ function renderGrid(data) {
 
     if (!listing || !availability) return;
 
+    // 🖼️ IMAGE HANDLING
     let image = (item["Provide images of the item in question."] || "").trim();
 
     if (image.includes("drive.google.com") || image.match(/[-\w]{25,}/)) {
@@ -140,11 +141,31 @@ function renderGrid(data) {
       image = "https://via.placeholder.com/300x200?text=No+Image";
     }
 
+    // 🧠 FIELD MAPPING
+    const objectName = item["What is the Object?"] || "No Item";
+    const email = item["What is your contact info(UTD Email)"] || "N/A";
+    const tags = item["What tags best describe the item and its history?"] || "None";
+    const notes = item["Which option best explains your ideal exchange method? (Reminder. Items shouldn't be left unattended in public spaces and breezeways.)"] || "N/A";
+    const willingHelp = (item["Are you comfortable with helping move this item if its heavy?"] || "")
+      .toLowerCase()
+      .trim();
+
+    // 🧱 CARD BUILD
     html += `
       <div class="card">
-        <img src="${image}" />
-        <h3>${item["What is the Object?"] || "No Title"}</h3>
-        <p>${item["Email Address"] || "N/A"}</p>
+
+        <img src="${image}" alt="Item Image" />
+
+        <h3>${objectName}</h3>
+
+        <p><strong>Email:</strong> ${email}</p>
+
+        <p class="tags"><strong>Tags:</strong> ${tags}</p>
+
+        <p><strong>Notes:</strong> ${notes}</p>
+
+        ${willingHelp === "yes" ? `<p style="color:green;"><strong>*Willing to help move</strong></p>` : ""}
+
       </div>
     `;
 
