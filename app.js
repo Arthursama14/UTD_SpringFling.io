@@ -30,23 +30,16 @@ function buildFilters(data) {
       .toLowerCase()
       .trim();
 
-    // 🧠 OBJECT FILTER FIX
-    if (obj) {
-      objectSet.add(obj);
-    }
+    if (obj) objectSet.add(obj);
 
-    // 🧠 TAG PARSING FIX (handles multiple separators)
     if (tagsRaw) {
       tagsRaw
-        .split(/[,;|]/)   // handles comma, semicolon, pipe
-        .map(t => t.trim())
+        .split(/[,;|]/)
+        .map(t => t.trim().toLowerCase())
         .filter(Boolean)
         .forEach(t => tagSet.add(t));
     }
   });
-
-  console.log("Objects found:", objectSet);
-  console.log("Tags found:", tagSet);
 
   populateSelect("objectFilter", objectSet);
   populateSelect("tagFilter", tagSet);
@@ -59,12 +52,11 @@ function buildFilters(data) {
 }
 
 /* ---------------------------
-   POPULATE DROPDOWN (FIXED)
+   POPULATE DROPDOWN
 ----------------------------*/
 function populateSelect(id, values) {
   const select = document.getElementById(id);
 
-  // reset dropdown
   select.innerHTML = `<option value="all">All</option>`;
 
   if (!values || values.size === 0) {
@@ -77,30 +69,35 @@ function populateSelect(id, values) {
 
   values.forEach(val => {
     const option = document.createElement("option");
-    option.value = val;
+    option.value = val.toLowerCase();
     option.textContent = val;
     select.appendChild(option);
   });
 }
 
 /* ---------------------------
-   FILTER LOGIC (FIXED)
+   FILTER LOGIC
 ----------------------------*/
 function applyFilters() {
   const objectVal = document.getElementById("objectFilter").value;
   const tagVal = document.getElementById("tagFilter").value;
 
   const filtered = globalData.filter(item => {
-    const obj = (item["What is the Object?"] || "").trim();
-    const tags = (item["What tags best describe the item and its history?"] || "").toLowerCase();
+
+    const obj = (item["What is the Object?"] || "").trim().toLowerCase();
+
+    const tags = (item["What tags best describe the item and its history?"] || "")
+      .toLowerCase();
+
+    const tagList = tags.split(/[,;|]/).map(t => t.trim());
 
     const objectMatch =
       objectVal === "all" ||
-      obj.toLowerCase() === objectVal.toLowerCase();
+      obj === objectVal;
 
     const tagMatch =
       tagVal === "all" ||
-      tags.split(",").map(t => t.trim()).includes(tagVal.toLowerCase());
+      tagList.includes(tagVal);
 
     return objectMatch && tagMatch;
   });
@@ -127,10 +124,12 @@ function renderGrid(data) {
 
     if (!listing || !availability) return;
 
-    // 🖼️ IMAGE HANDLING
+    /* ---------------------------
+       IMAGE HANDLING (SAFE)
+    ----------------------------*/
     let image = (item["Provide images of the item in question."] || "").trim();
 
-    if (image.includes("drive.google.com") || image.match(/[-\w]{25,}/)) {
+    if (image && image.includes("drive.google.com")) {
       const match = image.match(/[-\w]{25,}/);
       if (match) {
         image = `https://lh3.googleusercontent.com/d/${match[0]}`;
@@ -141,16 +140,21 @@ function renderGrid(data) {
       image = "https://via.placeholder.com/300x200?text=No+Image";
     }
 
-    // 🧠 FIELD MAPPING
+    /* ---------------------------
+       FIELDS
+    ----------------------------*/
     const objectName = item["What is the Object?"] || "No Item";
     const email = item["What is your contact info(UTD Email)"] || "N/A";
     const tags = item["What tags best describe the item and its history?"] || "None";
     const notes = item["Which option best explains your ideal exchange method? (Reminder. Items shouldn't be left unattended in public spaces and breezeways.)"] || "N/A";
+
     const willingHelp = (item["Are you comfortable with helping move this item if its heavy?"] || "")
       .toLowerCase()
       .trim();
 
-    // 🧱 CARD BUILD
+    /* ---------------------------
+       CARD HTML
+    ----------------------------*/
     html += `
       <div class="card">
 
@@ -164,7 +168,10 @@ function renderGrid(data) {
 
         <p><strong>Notes:</strong> ${notes}</p>
 
-        ${willingHelp === "yes" ? `<p style="color:green;"><strong>*Willing to help move</strong></p>` : ""}
+        ${willingHelp === "yes"
+          ? `<p style="color:green;"><strong>*Willing to help move</strong></p>`
+          : ""
+        }
 
       </div>
     `;
@@ -175,29 +182,29 @@ function renderGrid(data) {
   document.getElementById("listings").innerHTML =
     count ? html : "<p>No matching items</p>";
 }
+
+/* ---------------------------
+   🌸 PETALS (FIXED INIT)
+----------------------------*/
 function createPetal() {
   const petal = document.createElement("div");
   petal.classList.add("petal");
 
-  // random horizontal position
   petal.style.left = Math.random() * window.innerWidth + "px";
 
-  // random size variation
-  const size = Math.random() * 8 + 6;
+  const size = Math.random() * 8 + 18;
   petal.style.width = size + "px";
   petal.style.height = size + "px";
 
-  // random speed
   const duration = Math.random() * 5 + 5;
   petal.style.animationDuration = duration + "s";
 
   document.body.appendChild(petal);
 
-  // remove after animation ends
-  setTimeout(() => {
-    petal.remove();
-  }, duration * 1000);
+  setTimeout(() => petal.remove(), duration * 1000);
 }
 
-// continuous loop
-setInterval(createPetal, 300);
+/* IMPORTANT: wait for page load */
+window.addEventListener("load", () => {
+  setInterval(createPetal, 300);
+});
