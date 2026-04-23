@@ -35,6 +35,26 @@
       100% { transform: rotate(-2deg); }
     }
 
+	<div id="filterBar">
+
+	<div class="filter-group">
+		<label>Object Type</label>
+		<select id="objectFilter">
+		<option value="all">All Objects</option>
+		</select>
+	</div>
+
+	<div class="filter-group">
+		<label>Tags</label>
+		<select id="tagFilter">
+		<option value="all">All Tags</option>
+		</select>
+	</div>
+
+	</div>
+
+	<div id="listings"></div>
+
     /* 🧱 Grid */
     .grid {
       display: grid;
