@@ -1,23 +1,40 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxP0wiijf3Ee3dt-uG5G4MdhmntVoV9Utd-exkFG-NxZsfvQPPZ2qkIuIOA86qPAVpn/exec";
+const SHEET_ID = "1qevKj7o670qjJR5uRik30gknlQAvX87rrliKdpQ-5Xk";
 
-// ✅ Add proxy in front
-const PROXY = "https://api.allorigins.win/raw?url=";
+// This pulls sheet data as JSON
+const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/Form%20Responses%201`;
 
-fetch(PROXY + encodeURIComponent(API_URL))
-  .then(response => response.json())
+fetch(API_URL)
+  .then(res => res.json())
   .then(data => {
-    console.log("API Data:", data);
+    console.log("Data:", data);
 
     let html = "";
+    let count = 0;
 
     data.forEach(item => {
-      html += `<div class="card">
-        <h3>${item["What is the Object?"]}</h3>
-      </div>`;
+      const approved = (item["Approved"] || "").toLowerCase();
+      const availability = (item["Mark the current availability of the item. If the item is no longer available, please resubmit an updated form."] || "").toLowerCase();
+
+      if (approved !== "yes" || availability !== "available") return;
+
+      let image = item["Provide images of the item in question."];
+
+      if (image && image.includes("id=")) {
+        const id = image.split("id=")[1];
+        image = `https://drive.google.com/uc?export=view&id=${id}`;
+      }
+
+      html += `
+        <div class="card">
+          <img src="${image || 'https://via.placeholder.com/300'}"/>
+          <h3>${item["What is the Object?"]}</h3>
+        </div>
+      `;
+
+      count++;
     });
 
-    document.getElementById("listings").innerHTML = html;
+    document.getElementById("listings").innerHTML =
+      count === 0 ? "<p>No listings yet</p>" : html;
   })
-  .catch(error => {
-    console.error("Fetch error:", error);
-  });
+  .catch(err => console.error(err));
