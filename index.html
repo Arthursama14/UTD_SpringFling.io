@@ -10,12 +10,16 @@
   <style>
     body {
       margin: 0;
-      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
       font-family: Arial, sans-serif;
+
+      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+      background-attachment: fixed;
+      background-size: cover;
+
       overflow-x: hidden;
     }
 
-    /* 🎮 TITLE */
+    /* ================= TITLE ================= */
     .title {
       text-align: center;
       color: white;
@@ -23,7 +27,11 @@
       font-size: 48px;
       margin-top: 30px;
       margin-bottom: 5px;
+
       animation: sway 6s ease-in-out infinite;
+
+      position: relative;
+      z-index: 5;
     }
 
     @keyframes sway {
@@ -32,21 +40,27 @@
       100% { transform: rotate(-2deg); }
     }
 
-    /* 📌 DISCLAIMER */
+    /* ================= DISCLAIMER ================= */
     .disclaimer {
       max-width: 850px;
       margin: 10px auto 20px;
-      padding: 12px 18px;
+      padding: 14px 18px;
+
       text-align: center;
       font-size: 14px;
-      color: #333;
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 10px;
-      backdrop-filter: blur(4px);
+
+      background: rgba(0,0,0,0.85);
+      color: white;
+
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+
+      position: relative;
+      z-index: 5;
     }
 
     .disclaimer a {
-      color: #6a1b9a;
+      color: #ffccff;
       font-weight: bold;
       text-decoration: none;
     }
@@ -58,28 +72,26 @@
     .disclaimer em {
       font-size: 12.5px;
       line-height: 1.4;
+      display: block;
+      margin-top: 8px;
     }
 
-    /* 🔍 FILTER BAR */
+    /* ================= FILTERS ================= */
     #filterBar {
       display: flex;
       justify-content: center;
       gap: 20px;
       margin: 20px;
       flex-wrap: wrap;
+
+      position: relative;
+      z-index: 5;
     }
 
     .filter-group {
       display: flex;
       flex-direction: column;
       font-size: 14px;
-    }
-
-    select {
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background: white;
     }
 
     label {
@@ -89,19 +101,30 @@
       color: #444;
     }
 
-    /* 🧱 GRID */
+    select {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    /* ================= GRID ================= */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
       padding: 20px;
+
+      position: relative;
+      z-index: 5;
     }
 
-    /* 📦 CARD */
+    /* ================= CARD ================= */
     .card {
       background: white;
       border-radius: 12px;
       padding: 15px;
+
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       transition: transform 0.2s ease;
     }
@@ -114,8 +137,11 @@
       width: 100%;
       height: 200px;
       object-fit: cover;
+
       border-radius: 8px;
       margin-bottom: 10px;
+
+      cursor: pointer;
     }
 
     .card p {
@@ -129,7 +155,7 @@
       color: #555;
     }
 
-    /* 🌸 PETALS */
+    /* ================= PETALS ================= */
     .petal {
       position: fixed;
       top: -20px;
@@ -145,9 +171,9 @@
 
       border: 1px solid rgba(255, 255, 255, 0.9);
 
-      z-index: 0;
-
       transform: rotate(45deg);
+
+      z-index: 1;
 
       animation: fall linear forwards;
     }
@@ -157,46 +183,55 @@
         transform: translateY(0) translateX(0) rotate(0deg);
         opacity: 0.95;
       }
-
-      50% {
-        transform: translateY(50vh) translateX(30px) rotate(180deg);
-        opacity: 0.9;
-      }
-
       100% {
         transform: translateY(110vh) translateX(-30px) rotate(360deg);
         opacity: 0;
       }
+    }
+
+    /* ================= LIGHTBOX ================= */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+
+      background: rgba(0,0,0,0.92);
+
+      justify-content: center;
+      align-items: center;
+
+      z-index: 9999;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- 🎮 TITLE -->
+  <!-- TITLE -->
   <h1 class="title">Spring Fling</h1>
 
-  <!-- 📌 DISCLAIMER -->
+  <!-- DISCLAIMER -->
   <div class="disclaimer">
     <p>
       Welcome to the exchange list! If you'd like to add an item,
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3PSOYm81WJXwmicYqCw-HwvgkiSonD2rLF4TkTe_6KaawmQ/viewform?usp=header"
-         target="_blank">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3PSOYm81WJXwmicYqCw-HwvgkiSonD2rLF4TkTe_6KaawmQ/viewform?usp=header" target="_blank">
         click here
-      </a>!
+      </a>.
     </p>
 
-    <p>
-      <em>
-        *Note: This is a voluntary tool for browsing items people want to give away.
-        We are not responsible for communications and interactions past this point.
-        Items listing take time to be added and approved. All communication is done
-        through your UTD email. If you'd like a listing removed email jeb160630@utdallas.edu.
-      </em>
-    </p>
+    <em>
+      This is a voluntary tool. We are not responsible for interactions after contact.
+      Listings may take time to appear. Use your UTD email for communication.
+    </em>
   </div>
 
-  <!-- 🔍 FILTERS -->
+  <!-- FILTERS -->
   <div id="filterBar">
     <div class="filter-group">
       <label>Object Type</label>
@@ -213,10 +248,15 @@
     </div>
   </div>
 
-  <!-- 📦 GRID -->
+  <!-- GRID -->
   <div id="listings" class="grid"></div>
 
-  <!-- 🌸 PETAL SCRIPT (FIXED) -->
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox" onclick="this.style.display='none'">
+    <img id="lightboxImg" src="" />
+  </div>
+
+  <!-- PETALS -->
   <script>
     function createPetal() {
       const petal = document.createElement("div");
@@ -232,16 +272,13 @@
       petal.style.animationDuration = duration + "s";
 
       document.body.appendChild(petal);
-
       setTimeout(() => petal.remove(), duration * 1000);
     }
 
-    window.onload = () => {
-      setInterval(createPetal, 250);
-    };
+    setInterval(createPetal, 250);
   </script>
 
-  <!-- ⚙️ YOUR APP SCRIPT -->
+  <!-- MAIN SCRIPT -->
   <script src="app.js"></script>
 
 </body>
