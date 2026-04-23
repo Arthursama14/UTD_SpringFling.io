@@ -23,17 +23,22 @@ fetch(API_URL)
       }
 
       // 🖼️ IMAGE HANDLING (safe fallback)
-      let image = item["Provide images of the item in question."] || "";
+		let image = item["Provide images of the item in question."] || "";
 
-      // Handle Google Drive links
-      if (image.includes("id=")) {
-        const id = image.split("id=")[1];
-        image = `https://drive.google.com/uc?export=view&id=${id}`;
-      }
+		// 🔥 Extract Google Drive file ID properly
+		if (image.includes("drive.google.com")) {
+		  const match = image.match(/[-\w]{25,}/); // extracts file ID safely
 
-      if (!image) {
-        image = "https://via.placeholder.com/300x200?text=No+Image";
-      }
+		  if (match) {
+			const fileId = match[0];
+			image = `https://drive.google.com/uc?export=view&id=${fileId}`;
+		  }
+		}
+
+		// fallback image
+		if (!image) {
+		  image = "https://via.placeholder.com/300x200?text=No+Image";
+		}
 
       // 🧱 CARD BUILD
       html += `
